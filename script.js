@@ -1,12 +1,15 @@
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
+const left_btn = document.getElementById("left-btn");
+const right_btn = document.getElementById("right-btn");
+const up_btn = document.getElementById("jump-btn");
+
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    if (state.started) draw();
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
 const state = {
     levelIndex: 0,
@@ -41,15 +44,22 @@ const state = {
     resting: false,
     playTime: 10000,
     RestTime: 5000,
+
+    started: false,
+    frozen: false,
+    crashCooldown: false,
 };
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 const camera = { x: 0, y: 0 };
 
 const player = {
     x: 0,
     y: 0,
-    height: 30,
-    width: 30,
+    height: 40,
+    width: 20,
     gravity: 0.5,
     velocity: 0,
     velocityX: 0,
@@ -61,6 +71,14 @@ const clones = [];
 
 const keys = {};
 
+window.addEventListener("error", e => {
+    alert("ERROR: " + e.message + "\nFile: " + e.filename + "\nLine: " + e.lineno);
+});
+
+window.addEventListener("unhandledrejection", e => {
+    alert("PROMISE ERROR: " + e.reason);
+});
+
 document.addEventListener("keydown", e => {
     keys[e.key] = true;
     if (e.key === " " || e.key === "w") {
@@ -71,6 +89,32 @@ document.addEventListener("keydown", e => {
 
 document.addEventListener("keyup", e => {
     keys[e.key] = false;
+});
+
+left_btn.addEventListener("touchstart", e => {
+    e.preventDefault();
+    keys["a"] = true;
+});
+
+left_btn.addEventListener("touchend", e => {
+    e.preventDefault();
+    keys["a"] = false;
+});
+
+right_btn.addEventListener("touchstart", e => {
+    e.preventDefault();
+    keys["d"] = true;
+});
+
+right_btn.addEventListener("touchend", e => {
+    e.preventDefault();
+    keys["d"] = false;
+});
+
+up_btn.addEventListener("touchstart", e => {
+    keys[" "] = true;
+    state.jumpBuffered = true;
+    e.preventDefault();
 });
 
 function randint(min, max) {
@@ -123,11 +167,41 @@ function checkGoal() {
 
     const next = state.levelIndex + 1;
     if (next >= LEVELS.length) {
-        alert("you made it. happiness achieved");
-        startLevel(0);
+        triggerCrashSequence();
     } else {
         startLevel(next);
     }
+}
+
+function triggerCrashSequence() {
+    if (state.frozen || state.crashCooldown) return;
+    state.frozen = true;
+    setTimeout(showUnresponsiveModal, 7000);
+}
+
+function showUnresponsiveModal() {
+    document.getElementById("crashPageTitle").textContent = document.title;
+    document.getElementById("crashPageUrl").textContent = location.href;
+    document.getElementById("crashModal").style.display = "flex";
+}
+
+function fakeWait() {
+    document.getElementById("crashModal").style.display = "none";
+    document.getElementById("board").style.display = "none";
+    document.getElementById("crashPage").style.display = "flex";
+}
+
+function fakeKill() {
+    resetGame();
+}
+
+function resetGame() {
+    document.getElementById("crashModal").style.display = "none";
+    document.getElementById("crashPage").style.display = "none";
+    document.getElementById("board").style.display = "block";
+    state.frozen = false;
+    state.crashCooldown = true;
+    setTimeout(() => { state.crashCooldown = false; }, 1000);
 }
 
 function death() {
@@ -228,13 +302,13 @@ function updateMovingPlatforms() {
     moving_platforms.forEach(platform => {
         platform.x += MP_SPEED * state.mpDirection;
 
-        if (platform.x <= MP_LEFT_BOUND) {
-            platform.x = MP_LEFT_BOUND;
+        if (platform.x <= platform.left) {
+            platform.x = platform.left;
             state.mpDirection = 1;
         }
 
-        if (platform.x + platform.width >= MP_RIGHT_BOUND) {
-            platform.x = MP_RIGHT_BOUND - platform.width;
+        if (platform.x + platform.width >= platform.right) {
+            platform.x = platform.right - platform.width;
             state.mpDirection = -1;
         }
     });
@@ -318,10 +392,7 @@ function resolveCollisions(dx, dy) {
         player.ground = true;
     }
 
-    if (
-        (collideRect(new_x_rect, platforms[5]) || collideRect(new_y_rect, platforms[5])) &&
-        state.invisMessageShown
-    ) {
+    if (platforms[5] && (collideRect(new_x_rect, platforms[5]) || collideRect(new_y_rect, platforms[5])) && state.invisMessageShown) {
         alert("From here, some platforms become invisible, have fun! :)");
         state.invisMessageShown = false;
     }
@@ -541,6 +612,10 @@ function updateCamera() {
 function loop() {
     requestAnimationFrame(loop);
 
+    if (!state.started || state.frozen) {
+        return;
+    }
+
     if (updateRest()) {
         draw();
         return;
@@ -564,6 +639,12 @@ function loop() {
     updateLava();
 
     draw();
+}
+
+function startGame() {
+    document.getElementById("beware-panel").style.display = "none";
+    document.getElementById("board").style.display = "block";
+    state.started = true;
 }
 
 startLevel(0);

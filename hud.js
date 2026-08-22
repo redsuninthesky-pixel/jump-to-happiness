@@ -68,7 +68,9 @@ function draw() {
     });
 
     ctx.fillStyle = "#4A8FA8";
-    ctx.fillRect(fake_platform.x, fake_platform.y, fake_platform.width, fake_platform.height);
+    fake_platform.forEach((p) => {
+        ctx.fillRect(p.x, p.y, p.width, p.height);
+    })
     moving_platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
 
     ctx.fillStyle = "black";

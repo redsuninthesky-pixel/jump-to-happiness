@@ -79,7 +79,9 @@ function level1() {
         { x: 555, y: platforms[1].y - 93, width: 80, height: 93 },
     ];
 
-    const fake_platform = { x: 525, y: platforms[1].y - 304, width: 50, height: 20 };
+    const fake_platform = [
+        { x: 525, y: platforms[1].y - 304, width: 50, height: 20 }
+    ]
 
     const button = [
         {
@@ -106,7 +108,7 @@ function level1() {
     ];
 
     const moving_platforms = [
-        { width: 15, height: 10, x: 600, y: H - 524 },
+        { width: 15, height: 10, x: 600, y: H - 524, left: 350, right: 550},
     ];
 
     const goal = {
@@ -131,64 +133,110 @@ function level2() {
     const W = 1650;
     const H = 2560;
 
-    const grass = { x: 0, y: 2530, width: 1650, height: 30, friction: 1 };
+    const grass = {
+        x: 0,
+        y: H - 30,
+        width: W,
+        height: 30,
+        friction: 1,
+    };
 
     const conveyer = [
-        { x: 550, y: 890, width: 150, height: 50, dir: 1 },
+        {x: 0, y: H - 375 - 200, width: 50, height: 10, dir: 1},
+        {x: 510, y: H - 625, width: 10, height: 180, dir: 1},
+        {x: 580, y: H - 725, width: 10, height: 240, dir: -1},
+        {x: 650, y: H - 725, width: 10, height: 280, dir: 1},
+        {x: 369 + 190 + 450 + 193 + 50 + 90, y: H - 10 - 70 - 50 - 50 - 100, width: 10, height: 100, dir: -1},
     ];
 
     const platforms = [
-        { x: 250, y: 1990, width: 100, height: 60, friction: 1 },
-        { x: 400, y: 1890, width: 100, height: 60, friction: 1 },
-        { x: 640, y: 1880, width: 100, height: 50, friction: 1 },
-        { x: 850, y: 1880, width: 100, height: 60, friction: 1 },
-        { x: 1190, y: 1890, width: 110, height: 50, friction: 1 },
-        { x: 720, y: 1690, width: 50, height: 60, friction: 1 },
-        { x: 900, y: 1550, width: 50, height: 50, friction: 1 },
-        { x: 710, y: 1390, width: 50, height: 60, friction: 1 },
-        { x: 910, y: 1240, width: 30, height: 60, friction: 1 },
-        { x: 710, y: 1150, width: 30, height: 40, friction: 1 },
-        { x: 700, y: 950, width: 50, height: 60, friction: 1 },
-        { x: 160, y: 860, width: 250, height: 70, friction: 1 },
+        {x: 369, y: H - 10 - 70, width: 100, height: 10, friction: 1},
+        {x: 369 + 190 + 100, y: H - 10 - 70, width: 100, height: 10, friction: 1},
+        {x: 369 + 190 + 100 + 100 + 100, y: H - 10 - 70, width: 100, height: 10, friction: 1},
+        {x: 369 + 190 + 100 + 100 - 250, y: H - 10 - 70 - 200, width: 100, height: 10, friction: 1},
+        {x: 100, y: H - 375, width: 110, height: 10, friction: 1},
+        {x: 400, y: H - 625, width: 110, height: 10, friction: 1},
+        {x: 510, y: H - 625 + 180, width: 150, height: 10, friction: 1},
+        {x: 369 + 190 + 450 + 193 + 50, y: H - 10 - 70 - 50 - 50, width: 50, height: 10, friction: 1},
+    ];
+
+    const wall =  [
+        
     ];
 
     const spikes = [
-        { x: 770, y: 1950, width: 560, height: 290 },
-        { x: 130, y: 1010, width: 580, height: 730 },
-        { x: 950, y: 240, width: 590, height: 1500 },
-        { x: 150, y: 2470, width: 210, height: 60 },
+        {x: 50, y: H - 10 - 30, width: W, height: 10},
+        {x: platforms[3].x + 40, y: platforms[3].y - 50, width: 50, height: 50},
+        {x: 369 + 190 + 100 + 100 + 100 + 75, y: H - 10 - 70 - 300, width: 325, height: 10},
+        {x: platforms[1].x + platforms[1].width + 100, y: platforms[1].y - 410, width: 10, height: 10},
     ];
 
     const fake_sky = [
-        { x: 550, y: 1940, width: 220, height: 290 },
-        { x: 410, y: 700, width: 140, height: 240 },
+        {x: platforms[4].x + (platforms[4].width - 40) / 2, y: platforms[4].y - 140, width: 40, height: 40}
     ];
 
     const fake_spikes = [
-        { x: 560, y: 630, width: 150, height: 170 },
+        {x: platforms[4].x + (platforms[4].width - 110) / 2 - 40, y: platforms[4].y - 40, width: 40, height: 50}
     ];
 
-    const fake_platform = { x: 150, y: 2440, width: 200, height: 30 };
+    const wind_zones = [
+        { x: platforms[3].x - 250 - 50, y: platforms[3].y - 150, width: 250, height: 150, forceX: 2.5, forceY: -0.15, maxSpeedX: 8 },
+    ];
+
+    const fake_platform = [
+        {x: 50, y: spikes[0].y - 10, width: 50, height: 10},
+        {x: 369 + 190 + 450 + 193 + 100, y: H - 10 - 70 - 50 - 50, width: 50, height: 10, friction: 1},
+    ];
+
+    const button = [
+        
+    ];
+
+    const checkpoint = [
+        {x: platforms[4].x + (platforms[4].width - 40) / 2, y: platforms[4].y - 40, width: 40, height: 40},
+        {x: 590, y: H - 725, width: 70, height: 40},
+        {x: platforms[7].x + (platforms[7].width - 40) / 2, y: platforms[7].y - 40, width: 40, height: 40},
+    ];
 
     const invisible_platform = [
-        { x: 100, y: 2440, width: 40, height: 40 },
-        { x: 250, y: 2340, width: 50, height: 50 },
-        { x: 440, y: 2240, width: 60, height: 50 },
-        { x: 140, y: 2140, width: 110, height: 60 },
-        { x: 1090, y: 1750, width: 90, height: 190 },
-        { x: 900, y: 1090, width: 40, height: 50 },
-        { x: 710, y: 750, width: 50, height: 50 },
-        { x: 510, y: 650, width: 50, height: 50 },
+        {x: 150, y: spikes[0].y - 10, width: 10, height: 10},
+        {x: 200, y: spikes[0].y - 10, width: 10, height: 10},
+        {x: 250, y: spikes[0].y - 10, width: 10, height: 10},
+        {x: 300, y: spikes[0].y - 10, width: 10, height: 10},
+        {x: platforms[1].x + platforms[1].width + 100, y: platforms[1].y - 400, width: 10, height: 400},
+        {x: platforms[1].x + platforms[1].width + 50, y: platforms[1].y - 50, width: 10, height: 10},
+        {x: platforms[1].x + platforms[1].width - 50, y: platforms[1].y - 100, width: 10, height: 10},
+        {x: platforms[1].x + platforms[1].width - 100, y: platforms[1].y - 150, width: 10, height: 10},
+        {x: 30, y: platforms[4].y, width: 10, height: 10},
+        {x: 0, y: platforms[4].y - 40, width: 10, height: 10},
+        {x: 70, y: platforms[4].y - 100, width: 10, height: 10},
+        {x: 369 + 190 + 450, y: H - 10 - 70 - 50, width: 10, height: 10},
+        {x: 369 + 190 + 450 + 58, y: H - 10 - 70 - 50 - 39, width: 10, height: 10},
+        {x: 369 + 190 + 450 + 94, y: H - 10 - 70 - 50 + 39, width: 10, height: 10},
+        {x: 369 + 190 + 450 + 193, y: H - 10 - 70 - 50, width: 10, height: 10},
+        {x: 369 + 190 + 450 + 193, y: H - 10 - 70 - 50, width: 10, height: 10},
+        {x: 369 + 190 + 450 + 193 + 150, y: H - 10 - 70, width: 100, height: 10},
     ];
 
-    const goal = { x: 160, y: 790, width: 70, height: 70 };
+    const moving_platforms = [
+        {x: platforms[3].x - 300, y: platforms[3].y - 50, width: 10, height: 10, left: platforms[3].x - 300, right: platforms[3].x - 50}
+    ];
+
+    const goal = {
+        x: invisible_platform[16].x + (invisible_platform[16].width - 40) / 2,
+        y: invisible_platform[16].y - 40,
+        width: 40,
+        height: 40,
+    };
 
     return {
-        name: "New Level",
+        name: "Ground Floor",
         width: W,
         height: H,
-        spawn: { x: 10, y: 2490 },
-        grass, conveyer, platforms, spikes, fake_sky, fake_spikes, fake_platform, invisible_platform, goal,
+        spawn: { x: 10, y: H - 70 },
+        grass, wind_zones, conveyer, platforms, wall, spikes,
+        fake_sky, fake_spikes, fake_platform, button, checkpoint,
+        invisible_platform, moving_platforms, goal,
     };
 }
 

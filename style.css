@@ -1,0 +1,290 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: lightblue;
+}
+
+#board {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+#beware-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: red;
+    height: 100vh;
+}
+
+#beware-panel h1 {
+    font-size: 5em;
+    margin: 0px;
+}
+
+#beware-panel p {
+    font-size: 1.5em;
+    color: white;
+}
+
+#beware-panel button {
+    width: 200px;
+    height: 50px;
+    border-radius: 20px;
+    background-color: red;
+    color: white;
+    font-size: 1.5em;
+    font-family: Times;
+    border: 1px solid black;
+}
+
+.crash-btn {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.crash-btn-filled {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 4px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    background: #1a73e8;
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.crash-btn-filled:hover {
+    background: #1765cc;
+}
+
+#crashModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 99999;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    align-items: center;
+    justify-content: center;
+}
+
+.crash-dialog {
+    background: #fff;
+    width: 460px;
+    border: 1px solid #b0b0b0;
+    border-radius: 2px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+.crash-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.crash-titlebar-text {
+    font-size: 14px;
+    color: #202020;
+}
+
+.crash-titlebar-close {
+    font-size: 18px;
+    line-height: 1;
+    color: #888;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.crash-titlebar-close:hover {
+    color: #000;
+}
+
+.crash-dialog-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px 8px;
+}
+
+.crash-sad-icon {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    image-rendering: pixelated;
+}
+
+.crash-dialog-text {
+    flex: 1;
+}
+
+.crash-dialog-body {
+    color: #29335c;
+    font-size: 13px;
+    line-height: 18px;
+    margin: 0 0 10px;
+}
+
+.crash-page-list {
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: #fff;
+    max-height: 60px;
+    overflow-y: auto;
+    padding: 6px 8px;
+    font-size: 12px;
+    color: #333;
+}
+
+.crash-page-list-item {
+    line-height: 18px;
+}
+
+.crash-page-url {
+    color: #666;
+}
+
+.crash-dialog-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 20px 18px;
+}
+
+.crash-btn-plain,
+.crash-btn-wait {
+    height: 28px;
+    padding: 0 14px;
+    border-radius: 2px;
+    border: 1px solid #adadad;
+    background: linear-gradient(#fefefe, #efefef);
+    font-size: 12px;
+    color: #2b2b2b;
+}
+
+.crash-btn-wait {
+    border-color: #4d90fe;
+    box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.3);
+}
+
+#crashPage {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 99999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 15vh 0 0 12vw;
+    box-sizing: border-box;
+}
+
+.crash-page-icon {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+}
+
+.crash-page-title {
+    font-size: 26px;
+    font-weight: 400;
+    color: #333;
+    margin-top: 16px;
+}
+
+.crash-page-body {
+    font-size: 14px;
+    color: #767676;
+    margin: 12px 0 20px;
+}
+
+.crash-page-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 70vw;
+    max-width: 1000px;
+}
+
+.crash-page-link {
+    color: #1a73e8;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.crash-page-link:hover {
+    text-decoration: underline;
+}
+
+.mobile-only {
+  display: none;
+}
+
+
+@media (max-width: 767px) {
+    .mobile-only {
+        display: block;
+   }
+}
+
+
+@media (orientation: portrait) {
+    #board, #controls {
+       display: none;
+    }
+    #rotate-overlay {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        align-items: center;
+        justify-content: center;
+        background: black;
+        color: white;
+        font-size: 24px;
+        text-align: center;
+        z-index: 9999;
+    }
+}
+@media (orientation: landscape) {
+    #rotate-overlay { display: none; }
+}
+
+#left-btn {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 20px;
+    top: calc(100vh - 70px);
+}
+
+#right-btn {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 80px;
+    top: calc(100vh - 70px);
+}
+
+#jump-btn {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: calc(100vw - 20px - 50px);
+    top: calc(100vh - 70px);
+}
