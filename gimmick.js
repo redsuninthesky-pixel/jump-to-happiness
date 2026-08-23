@@ -11,12 +11,19 @@ const GIMMICK = {
     redDuration: 300,
 
     lavaRiseSpeed: 0.05,
+
+    shakeTime: 10,
+    shakeDist: 6,
+
+    shakeChance: 0.002,
+
+    dimAmount: 0.4,
 };
 
 function updateRest() {
     if (state.resting) {
-        state.RestTime--;
-        if (state.RestTime <= 0) {
+        state.restTime--;
+        if (state.restTime <= 0) {
             state.resting = false;
             state.playTime = GIMMICK.playDuration;
         }
@@ -26,7 +33,7 @@ function updateRest() {
     state.playTime--;
     if (state.playTime <= 0) {
         state.resting = true;
-        state.RestTime = GIMMICK.restDuration;
+        state.restTime = GIMMICK.restDuration;
     }
     return false;
 }
@@ -77,4 +84,45 @@ function updateLava() {
 
 function resetLava() {
     state.lavaHeight = WORLD_HEIGHT;
+}
+
+function shakeScreen() {
+    if (!state.shaking) return;
+    state.shakeTime--;
+    if (state.shakeTime <= 0) {
+        state.shakeTime = GIMMICK.shakeTime;
+        state.shaking = false;
+        state.shakeX = 0;
+        state.shakeY = 0;
+        return;
+    }
+    state.shakeX = randint(-GIMMICK.shakeDist, GIMMICK.shakeDist);
+    state.shakeY = randint(-GIMMICK.shakeDist, GIMMICK.shakeDist);
+}
+
+function updateShake() {
+    if (Math.random() < GIMMICK.shakeChance && !state.shaking) {
+        state.shaking = true;
+        state.shakeTime = 10;
+    }
+}
+
+function updateDim() {
+    if (state.dim) {
+        state.dimTime--;
+        if (state.dimTime <= 0) {
+            state.dim = false;
+            state.dimTime = randint(1, 300);
+            state.dimTimer = randint(1, 300);
+        }
+    }
+    else {
+        state.dimTimer--;
+        if (state.dimTimer <= 0) {
+            state.dim = true;
+            state.dimTimer = randint(1, 300);
+            state.dimTime = randint(1, 300);
+        }
+    }
+    
 }

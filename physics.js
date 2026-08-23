@@ -1,12 +1,3 @@
-function collideRect(a, b) {
-    return (
-        a.x < b.x + b.width &&
-        a.x + a.width > b.x &&
-        a.y < b.y + b.height &&
-        a.y + a.height > b.y
-    );
-}
-
 function computeGroundFriction() {
     if (!player.ground) return 1;
     const feetRect = { x: player.x, y: player.y + player.height - 2, width: player.width, height: 4 };
@@ -73,10 +64,7 @@ function resolveCollisions(dx, dy) {
         player.ground = true;
     }
 
-    if (
-        (collideRect(new_x_rect, platforms[5]) || collideRect(new_y_rect, platforms[5])) &&
-        state.invisMessageShown
-    ) {
+    if (platforms[5] && (collideRect(new_x_rect, platforms[5]) || collideRect(new_y_rect, platforms[5])) && state.invisMessageShown) {
         alert("From here, some platforms become invisible, have fun! :)");
         state.invisMessageShown = false;
     }
@@ -251,12 +239,12 @@ function updateMeteors() {
 function updateMovingPlatforms() {
     moving_platforms.forEach(platform => {
         platform.x += MP_SPEED * state.mpDirection;
-        if (platform.x <= MP_LEFT_BOUND) {
-            platform.x = MP_LEFT_BOUND;
+        if (platform.x <= platform.left) {
+            platform.x = platform.left;
             state.mpDirection = 1;
         }
-        if (platform.x + platform.width >= MP_RIGHT_BOUND) {
-            platform.x = MP_RIGHT_BOUND - platform.width;
+        if (platform.x + platform.width >= platform.right) {
+            platform.x = platform.right - platform.width;
             state.mpDirection = -1;
         }
     });
@@ -294,8 +282,11 @@ function move() {
     ({ dx, dy } = resolveCollisions(dx, dy));
     updateMeteors();
     if (state.redLight) {
-        if (dx !== 0 || dy !== 0) {
+        const movingHoriz = keys["a"] || keys["d"] || state.boosting > 0;
+        if (movingHoriz || dy !== 0) {
             death();
+            recordTrail();
+            return;
         }
     }
     player.x += dx;

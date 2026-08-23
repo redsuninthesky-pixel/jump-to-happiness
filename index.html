@@ -5,23 +5,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>platforms</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: lightblue;
-        }
-        #board {
-            display: block;
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="finalScreen">
+        <span id="finalText">good job</span>
+    </div>
+    <div id="blackout"></div>
+    <div id="rotate-overlay">Please rotate your phone to landscape</div>
+    <div id="beware-panel">
+        <h1>BEWARE</h1>
+        <p>PLAY AT YOUR OWN RISK</p>
+        <button onclick="startGame()">START</button>
+    </div>
+    <button id="left-btn" class="mobile-only">←</button>
+    <button id="right-btn" class="mobile-only">→</button>
+    <button id="jump-btn" class="mobile-only">↑</button>
     <canvas id="board"></canvas>
+
+    <div id="crashModal">
+        <div class="crash-dialog">
+            <div class="crash-titlebar">
+                <span class="crash-titlebar-text">Page(s) Unresponsive</span>
+                <span class="crash-titlebar-close" onclick="fakeWait()">&times;</span>
+            </div>
+            <div class="crash-dialog-content">
+                <img class="crash-sad-icon" src="assets/unresponsive.png" alt="">
+                <div class="crash-dialog-text">
+                    <p class="crash-dialog-body">The following page(s) have become unresponsive. You can wait for them to become responsive or kill them.</p>
+                    <div class="crash-page-list">
+                        <div class="crash-page-list-item">&bull;&nbsp;&nbsp;<span id="crashPageTitle"></span> - <span class="crash-page-url" id="crashPageUrl"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="crash-dialog-actions">
+                <button class="crash-btn crash-btn-plain" onclick="fakeKill()">Kill pages</button>
+                <button class="crash-btn crash-btn-wait" onclick="fakeWait()">Wait</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="crashPage">
+        <img class="crash-page-icon" src="assets/awsnap.png" alt="">
+        <div class="crash-page-title">Aw, Snap!</div>
+        <p class="crash-page-body">Something went wrong while displaying this webpage.</p>
+        <div class="crash-page-row">
+            <a class="crash-page-link" href="#" onclick="return false;">Learn more</a>
+            <button class="crash-btn crash-btn-filled" onclick="resetGame()">Reload</button>
+        </div>
+    </div>
+
     <script src="const.js"></script>
+    <script src="utils.js"></script>
     <script src="levels.js"></script>
     <script src="physics.js"></script>
     <script src="hud.js"></script>

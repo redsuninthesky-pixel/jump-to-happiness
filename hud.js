@@ -1,6 +1,6 @@
 // drawing stuff
-function MandatoryRest() {
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
+function mandatoryRest() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = "30px Arial";
     ctx.fillStyle = "white";
@@ -8,7 +8,12 @@ function MandatoryRest() {
     ctx.textBaseline = "middle";
     ctx.fillText("Mandatory Rest Break", canvas.width / 2, canvas.height / 2);
     ctx.font = "20px Arial";
-    ctx.fillText(Math.ceil(state.RestTime / 60) + "s", canvas.width / 2, canvas.height / 2 + 40);
+    ctx.fillText(Math.ceil(state.restTime / 60) + "s", canvas.width / 2, canvas.height / 2 + 40);
+}
+
+function dimOverlay() {
+    ctx.fillStyle = `rgba(0, 0, 0, ${1 - GIMMICK.dimAmount})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawMeteor(m) {
@@ -35,8 +40,23 @@ function drawMeteor(m) {
     ctx.stroke();
 }
 
+function drawPlayer(p) {
+    ctx.fillStyle = "#ffe5ca";
+    ctx.fillRect(p.x, p.y, p.width, p.height);
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(p.x, p.y, p.width, 5);
+
+    ctx.fillRect(p.x + 7, p.y + 10, 5, 5);
+    ctx.fillRect(p.x + 19, p.y + 10, 5, 5);
+
+    ctx.fillRect(p.x + 7, p.y + 10 + 15, 16, 5);
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(-state.shakeX, -state.shakeY);
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
 
@@ -44,9 +64,6 @@ function draw() {
         ctx.fillStyle = "rgba(0, 206, 209, 0.15)";
         ctx.fillRect(zone.x, zone.y, zone.width, zone.height);
     });
-
-    ctx.fillStyle = "#FF6B00";
-    ctx.fillRect(player.x, player.y, player.width, player.height);
 
     ctx.fillStyle = "green";
     ctx.fillRect(grass.x, grass.y, grass.width, grass.height);
@@ -68,7 +85,9 @@ function draw() {
     });
 
     ctx.fillStyle = "#4A8FA8";
-    ctx.fillRect(fake_platform.x, fake_platform.y, fake_platform.width, fake_platform.height);
+    fake_platform.forEach((p) => {
+        ctx.fillRect(p.x, p.y, p.width, p.height);
+    })
     moving_platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
 
     ctx.fillStyle = "black";
@@ -86,12 +105,22 @@ function draw() {
 
     meteors.forEach(drawMeteor);
 
+    drawPlayer(player);
+    
     ctx.fillStyle = "#FF6B00";
     ctx.globalAlpha = 0.1;
     clones.forEach(clone => {
         const idx = Math.min(clone.frames, clone.locations.length - 1);
         const pos = clone.locations[idx];
-        if (pos) ctx.fillRect(pos.x, pos.y, player.width, player.height);
+        if (pos) {
+            const clone_obj = {
+                x: pos.x, 
+                y: pos.y, 
+                width: player.width, 
+                height: player.height
+            }
+            drawPlayer(clone_obj);
+        }
     });
     ctx.globalAlpha = 1;
 
@@ -129,5 +158,8 @@ function draw() {
         ctx.fillText(text, canvas.width / 2, 20);
     }
 
-    if (state.resting) MandatoryRest();
+    ctx.restore();
+
+    if (state.dim) dimOverlay();
+    if (state.resting) mandatoryRest();
 }
