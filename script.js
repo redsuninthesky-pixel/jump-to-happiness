@@ -177,7 +177,7 @@ function MandatoryRest(){
     ctx.fillRect(0,0,canvas.width, canvas.height);
     ctx.font = "30px Arial";
     ctx.fillStyle = "black";
-    ctx.fillText("Mandatory Rest Break", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("Mandatory Goon Break", canvas.width / 2, canvas.height / 2);
 }
 
 function drawMeteor(m) {
